@@ -9,9 +9,9 @@
     <packaging>pom</packaging>
     <version>1.0-SNAPSHOT</version>
     <modules>
+        <module>composite-classloader</module>
         <module>person-one</module>
         <module>person-two</module>
-        <module>loading-both</module>
     </modules>
 
     <properties>
