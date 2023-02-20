@@ -10,8 +10,8 @@ public class CompositeClassLoader extends ClassLoader {
 
     public CompositeClassLoader(URL firstUrl, URL secondUrl) {
         super();
-        this.firstClassLoader = new URLClassLoader(new URL[] {firstUrl});
-        this.secondClassLoader = new URLClassLoader(new URL[] {secondUrl});
+        this.firstClassLoader = new URLClassLoader(new URL[] {firstUrl}, this);
+        this.secondClassLoader = new URLClassLoader(new URL[] {secondUrl}, this);
     }
 
     public void setUseSecond(boolean useSecond) {
