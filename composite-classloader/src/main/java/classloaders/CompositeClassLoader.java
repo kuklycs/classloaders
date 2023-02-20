@@ -8,10 +8,10 @@ public class CompositeClassLoader extends ClassLoader {
     private final URLClassLoader secondClassLoader;
     private boolean useSecond = false;
 
-    public CompositeClassLoader(URL firstUrl, URL secondUrl) {
+    public CompositeClassLoader(URL firstImplUrl, URL secondImplUrl) {
         super();
-        this.firstClassLoader = new URLClassLoader(new URL[] {firstUrl}, this);
-        this.secondClassLoader = new URLClassLoader(new URL[] {secondUrl}, this);
+        this.firstClassLoader = new URLClassLoader(new URL[] {firstImplUrl}, this);
+        this.secondClassLoader = new URLClassLoader(new URL[] {secondImplUrl}, this);
     }
 
     public void setUseSecond(boolean useSecond) {
@@ -21,7 +21,7 @@ public class CompositeClassLoader extends ClassLoader {
     @Override
     public Class<?> loadClass(String name) throws ClassNotFoundException {
         try {
-            super.loadClass(name);
+            return super.loadClass(name);
         } catch (ClassNotFoundException ex) {
             // expected, go through
         }
