@@ -25,19 +25,6 @@ public class CompositeClassLoader extends ClassLoader {
         } catch (ClassNotFoundException ex) {
             // expected, go through
         }
-        if (!useSecond) {
-            try {
-                return firstClassLoader.loadClass(name);
-            } catch (ClassNotFoundException ex) {
-                System.out.println("First class loader failed to load class: " + name);
-            }
-        } else {
-            try {
-                return secondClassLoader.loadClass(name);
-            } catch (ClassNotFoundException ex) {
-                System.out.println("Second class loader failed to load class: " + name);
-            }
-        }
-        throw new ClassNotFoundException("Class was not found by any classloader");
+        return !useSecond ? firstClassLoader.loadClass(name) : secondClassLoader.loadClass(name);
     }
 }
