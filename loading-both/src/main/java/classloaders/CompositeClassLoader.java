@@ -20,6 +20,11 @@ public class CompositeClassLoader extends ClassLoader {
 
     @Override
     public Class<?> loadClass(String name) throws ClassNotFoundException {
+        try {
+            super.loadClass(name);
+        } catch (ClassNotFoundException ex) {
+            // expected, go through
+        }
         if (!useSecond) {
             try {
                 return firstClassLoader.loadClass(name);
@@ -33,6 +38,6 @@ public class CompositeClassLoader extends ClassLoader {
                 System.out.println("Second class loader failed to load class: " + name);
             }
         }
-        return super.loadClass(name);
+        throw new ClassNotFoundException("Class was not found by any classloader");
     }
 }

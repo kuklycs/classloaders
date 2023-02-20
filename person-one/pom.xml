@@ -10,7 +10,7 @@
     <modelVersion>4.0.0</modelVersion>
     <packaging>jar</packaging>
 
-    <artifactId>PersonOne</artifactId>
+    <artifactId>person-one</artifactId>
 
     <properties>
         <maven.compiler.source>17</maven.compiler.source>

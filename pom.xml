@@ -9,8 +9,8 @@
     <packaging>pom</packaging>
     <version>1.0-SNAPSHOT</version>
     <modules>
-        <module>PersonOne</module>
-        <module>PersonTwo</module>
+        <module>person-one</module>
+        <module>person-two</module>
         <module>loading-both</module>
     </modules>
 
