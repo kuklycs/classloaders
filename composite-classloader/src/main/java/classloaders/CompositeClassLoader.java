@@ -1,21 +1,15 @@
 package classloaders;
 
 import print.PrintVersion;
-import print.PrintableFactory;
-
-import java.net.URL;
 import java.net.URLClassLoader;
 
 public class CompositeClassLoader extends ClassLoader {
-    private final URLClassLoader firstClassLoader;
-    private final URLClassLoader secondClassLoader;
-
     private PrintVersion version = PrintVersion.V1;
+    private URLClassLoader firstClassLoader;
+    private URLClassLoader secondClassLoader;
 
-    public CompositeClassLoader(URL firstImplUrl, URL secondImplUrl) {
+    public CompositeClassLoader() {
         super();
-        this.firstClassLoader = new URLClassLoader(new URL[] {firstImplUrl});
-        this.secondClassLoader = new URLClassLoader(new URL[] {secondImplUrl});
     }
 
     public void setVersion(PrintVersion version) {
@@ -24,14 +18,21 @@ public class CompositeClassLoader extends ClassLoader {
 
     @Override
     public Class<?> loadClass(String name) throws ClassNotFoundException {
+        System.out.println("Loading class for name: " + name);
         switch (version) {
             case V1 -> {
+                if (firstClassLoader == null) {
+                    firstClassLoader = new URLClassLoader(LazyResourceLoader.getFirstResourceOnDemand());
+                }
                 return Class.forName(name, true, firstClassLoader);
             }
             case V2 -> {
+                if (secondClassLoader == null) {
+                    secondClassLoader = new URLClassLoader(LazyResourceLoader.getSecondResourceOnDemand());
+                }
                 return Class.forName(name, true, secondClassLoader);
             }
         }
-        throw new ClassNotFoundException("Did not find a class, should not happen");
+        return super.loadClass(name);
     }
 }

@@ -4,15 +4,14 @@ import print.PrintVersion;
 import print.Printable;
 import print.PrintableFactory;
 
-import java.net.URL;
-
 public class Demo {
     public static void main(String[] args) throws ClassNotFoundException {
-        URL personOneUrl = Demo.class.getClassLoader().getResource("person-one-1.0-SNAPSHOT.jar");
-        URL personTwoUrl = Demo.class.getClassLoader().getResource("person-two-1.0-SNAPSHOT.jar");
 
-        CompositeClassLoader compositeClassLoader = new CompositeClassLoader(personOneUrl, personTwoUrl);
+        //Test that nothing is loaded
+        LazyResourceLoader.test();
+        System.out.println("Accessed method, but no resources are loaded");
 
+        CompositeClassLoader compositeClassLoader = new CompositeClassLoader();
 
         //FIXME first mistake, loading all classes for all versions to invoke Class.forName and initialize static initializers
         compositeClassLoader.loadClass("model.Person");
