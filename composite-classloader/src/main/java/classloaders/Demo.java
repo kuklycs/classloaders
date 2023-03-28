@@ -11,13 +11,10 @@ public class Demo {
         URL personOneUrl = Demo.class.getClassLoader().getResource("person-one-1.0-SNAPSHOT.jar");
         URL personTwoUrl = Demo.class.getClassLoader().getResource("person-two-1.0-SNAPSHOT.jar");
 
-        //FIXME first mistake, factory is singleton
-        PrintableFactory factory = PrintableFactory.getInstance();
-
         CompositeClassLoader compositeClassLoader = new CompositeClassLoader(personOneUrl, personTwoUrl);
 
 
-        //FIXME second mistake, loading all classes for all versions to invoke Class.forName and initialize static initializers
+        //FIXME first mistake, loading all classes for all versions to invoke Class.forName and initialize static initializers
         compositeClassLoader.loadClass("model.Person");
 
         compositeClassLoader.setVersion(PrintVersion.V2);
@@ -26,10 +23,10 @@ public class Demo {
 
 
         // Now this is a result which I wanted to achieve but not nice yet
-        Printable first = factory.getPrintableImpl(PrintVersion.V1, "Martin", 27);
+        Printable first = PrintableFactory.getPrintableImpl(PrintVersion.V1, "Martin", 27);
         System.out.println(first.getAsString());
 
-        Printable second = factory.getPrintableImpl(PrintVersion.V2, "Honza", 40);
+        Printable second = PrintableFactory.getPrintableImpl(PrintVersion.V2, "Honza", 40);
         System.out.println(second.getAsString());
     }
 }

@@ -1,16 +1,14 @@
 package model;
 
-
 import print.PrintVersion;
 import print.Printable;
 import print.PrintableFactory;
 
-import java.util.function.Supplier;
 
 public class Person implements Printable {
 
     static {
-        PrintableFactory.getInstance().addPrintableImpl(PrintVersion.V1, new Person());
+        PrintableFactory.addPrintableImpl(PrintVersion.V1, new Person());
     }
 
     private final String name;

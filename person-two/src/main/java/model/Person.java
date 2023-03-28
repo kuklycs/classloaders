@@ -7,9 +7,9 @@ import print.PrintableFactory;
 
 public class Person implements Printable {
 
-    //FIXME third mistake, static initializer
+    //FIXME second mistake, static initializer
     static {
-        PrintableFactory.getInstance().addPrintableImpl(PrintVersion.V2, new Person());
+        PrintableFactory.addPrintableImpl(PrintVersion.V2, new Person());
     }
 
     private final String name;
