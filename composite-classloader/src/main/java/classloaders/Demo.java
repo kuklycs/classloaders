@@ -1,28 +1,35 @@
 package classloaders;
 
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
+import print.PrintVersion;
+import print.Printable;
+import print.PrintableFactory;
+
 import java.net.URL;
 
 public class Demo {
-    public static void main(String[] args) throws ClassNotFoundException, NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
-        URL personOneUrl = Demo.class.getClassLoader().getResource("PersonOne-1.0-SNAPSHOT.jar");
-        URL personTwoUrl = Demo.class.getClassLoader().getResource("PersonTwo-1.0-SNAPSHOT.jar");
+    public static void main(String[] args) throws ClassNotFoundException {
+        URL personOneUrl = Demo.class.getClassLoader().getResource("person-one-1.0-SNAPSHOT.jar");
+        URL personTwoUrl = Demo.class.getClassLoader().getResource("person-two-1.0-SNAPSHOT.jar");
+
+        //FIXME first mistake, factory is singleton
+        PrintableFactory factory = PrintableFactory.getInstance();
 
         CompositeClassLoader compositeClassLoader = new CompositeClassLoader(personOneUrl, personTwoUrl);
 
-        // use first implementation
-        Class<?> personOne = compositeClassLoader.loadClass("model.Person");
-        Constructor<?> constructorOne = personOne.getConstructor(String.class, Integer.TYPE);
-        Printable instanceOne = (Printable) constructorOne.newInstance("Honza", 25);
-        System.out.println(instanceOne.getAsString());
 
-        // use second implementation
-        compositeClassLoader.setUseSecond(true);
+        //FIXME second mistake, loading all classes for all versions to invoke Class.forName and initialize static initializers
+        compositeClassLoader.loadClass("model.Person");
 
-        Class<?> personTwo = compositeClassLoader.loadClass("model.Person");
-        Constructor<?> constructorTwo = personTwo.getConstructor(String.class, Integer.TYPE);
-        Printable instanceTwo = (Printable) constructorTwo.newInstance("Honza", 25);
-        System.out.println(instanceTwo.getAsString());
+        compositeClassLoader.setVersion(PrintVersion.V2);
+
+        compositeClassLoader.loadClass("model.Person");
+
+
+        // Now this is a result which I wanted to achieve but not nice yet
+        Printable first = factory.getPrintableImpl(PrintVersion.V1, "Martin", 27);
+        System.out.println(first.getAsString());
+
+        Printable second = factory.getPrintableImpl(PrintVersion.V2, "Honza", 40);
+        System.out.println(second.getAsString());
     }
 }
