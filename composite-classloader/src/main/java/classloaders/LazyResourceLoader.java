@@ -18,7 +18,7 @@ public class LazyResourceLoader {
     }
 
     public static void test() {
-        System.out.println("Inside test()");
+        System.out.println("Inside LazyResourceLoader test()");
     }
 
     public static URL[] getFirstResourceOnDemand() {

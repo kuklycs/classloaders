@@ -1,32 +1,18 @@
 package classloaders;
 
-import print.PrintVersion;
-import print.Printable;
-import print.PrintableFactory;
+import factory.*;
 
 public class Demo {
-    public static void main(String[] args) throws ClassNotFoundException {
-
-        //Test that nothing is loaded
+    public static void main(String[] args) throws CreationException {
         LazyResourceLoader.test();
-        System.out.println("Accessed method, but no resources are loaded");
+        PrintableProvider printableProvider = new PrintableProvider();
 
-        CompositeClassLoader compositeClassLoader = new CompositeClassLoader();
+        PrintableFactory factoryV1 = printableProvider.getPrintableFactory(PrintVersion.V1);
+        Printable first = factoryV1.create("Martin", 28);
+        System.out.println("Printable getAsString(): " + first.getAsString());
 
-        //FIXME first mistake, loading all classes for all versions to invoke Class.forName and initialize static initializers
-        compositeClassLoader.loadClass("model.Person");
-
-        // Now this is a result which I wanted to achieve but not nice yet
-        Printable first = PrintableFactory.getPrintableImpl(PrintVersion.V1, "Martin", 27);
-        System.out.println(first.getAsString());
-
-
-        compositeClassLoader.setVersion(PrintVersion.V2);
-
-        //have to load class for PrintVersion V2 otherwise will fail
-        compositeClassLoader.loadClass("model.Person");
-
-        Printable second = PrintableFactory.getPrintableImpl(PrintVersion.V2, "Honza", 40);
-        System.out.println(second.getAsString());
+        PrintableFactory factoryV2 = printableProvider.getPrintableFactory(PrintVersion.V2);
+        Printable second = factoryV2.create("Honza", 40);
+        System.out.println("Printable getAsString(): " + second.getAsString());
     }
 }

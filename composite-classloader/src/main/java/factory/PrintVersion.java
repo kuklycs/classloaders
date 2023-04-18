@@ -1,4 +1,4 @@
-package print;
+package factory;
 
 public enum PrintVersion {
     V1,

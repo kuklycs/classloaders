@@ -13,7 +13,6 @@
         <module>composite-classloader</module>
         <module>person-one</module>
         <module>person-two</module>
-        <module>common</module>
     </modules>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
