@@ -1,28 +1,32 @@
 package classloaders;
 
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
-import java.net.URL;
+import print.PrintVersion;
+import print.Printable;
+import print.PrintableFactory;
 
 public class Demo {
-    public static void main(String[] args) throws ClassNotFoundException, NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
-        URL personOneUrl = Demo.class.getClassLoader().getResource("PersonOne-1.0-SNAPSHOT.jar");
-        URL personTwoUrl = Demo.class.getClassLoader().getResource("PersonTwo-1.0-SNAPSHOT.jar");
+    public static void main(String[] args) throws ClassNotFoundException {
 
-        CompositeClassLoader compositeClassLoader = new CompositeClassLoader(personOneUrl, personTwoUrl);
+        //Test that nothing is loaded
+        LazyResourceLoader.test();
+        System.out.println("Accessed method, but no resources are loaded");
 
-        // use first implementation
-        Class<?> personOne = compositeClassLoader.loadClass("model.Person");
-        Constructor<?> constructorOne = personOne.getConstructor(String.class, Integer.TYPE);
-        Printable instanceOne = (Printable) constructorOne.newInstance("Honza", 25);
-        System.out.println(instanceOne.getAsString());
+        CompositeClassLoader compositeClassLoader = new CompositeClassLoader();
 
-        // use second implementation
-        compositeClassLoader.setUseSecond(true);
+        //FIXME first mistake, loading all classes for all versions to invoke Class.forName and initialize static initializers
+        compositeClassLoader.loadClass("model.Person");
 
-        Class<?> personTwo = compositeClassLoader.loadClass("model.Person");
-        Constructor<?> constructorTwo = personTwo.getConstructor(String.class, Integer.TYPE);
-        Printable instanceTwo = (Printable) constructorTwo.newInstance("Honza", 25);
-        System.out.println(instanceTwo.getAsString());
+        // Now this is a result which I wanted to achieve but not nice yet
+        Printable first = PrintableFactory.getPrintableImpl(PrintVersion.V1, "Martin", 27);
+        System.out.println(first.getAsString());
+
+
+        compositeClassLoader.setVersion(PrintVersion.V2);
+
+        //have to load class for PrintVersion V2 otherwise will fail
+        compositeClassLoader.loadClass("model.Person");
+
+        Printable second = PrintableFactory.getPrintableImpl(PrintVersion.V2, "Honza", 40);
+        System.out.println(second.getAsString());
     }
 }
